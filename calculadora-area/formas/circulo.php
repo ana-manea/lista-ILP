@@ -35,7 +35,6 @@
                 session_start();
                 $_SESSION['resultado'] = $resultado;
                 $_SESSION['erro'] = null;
-                echo "<div class='resultado'>\n\nÁrea: " . number_format($area, 2, ',', '.') . "</div>";
             } else {
                 session_start();
                 $_SESSION['resultado'] = null;

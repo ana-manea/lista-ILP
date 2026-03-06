@@ -27,19 +27,35 @@
             <p></p>
             <label>Altura (h)</label>
             <input type="number" name="altura" required>
-            <input type="submit" name="calc_retangulo" value="Calcular">
+            <input type="submit" id="botao" name="calc_retangulo" value="Calcular">
         </form>
         <?php
-            if (isset($_POST['calc_retangulo']) && !empty($_POST['base']) && !empty($_POST['altura']) && ($_POST['base'] >= 0) && ($_POST['altura'] >= 0) ) {
+        if (isset($_POST['calc_retangulo'])) {
+            if (!empty($_POST['base']) && !empty($_POST['altura']) && ($_POST   ['base'] >= 0) && ($_POST['altura'] >= 0) ) {
                 $base = $_POST['base'];
                 $altura = $_POST['altura'];
                 $area = $base * $altura;
-                echo "<div class='resultado'>Área: " . number_format($area, 2, ',', '.') . "</div>";
+                $resultado = number_format($area, 2, ',', '.');
+                session_start();
+                $_SESSION['resultado'] = $resultado;
+                $_SESSION['erro'] = null;
+            } else {
+                session_start();
+                $_SESSION['resultado'] = null;
+                $_SESSION['erro'] = "Informe um valor válido.";
             }
+            header('Location: retangulo.php');
+            exit();
+        }
 
-            else if (isset($_POST['calc_retangulo']) && ($_POST['base'] < 0) || isset($_POST['calc_retangulo']) && ($_POST['altura'] < 0)) {
-                echo "Informe um valor válido";
-            }
+        session_start();
+        if (!empty($_SESSION['resultado'])) {
+            echo "<div class='resultado'>Área: " . $_SESSION['resultado'] . "</div>";
+            $_SESSION['resultado'] = null;
+        } elseif (!empty($_SESSION['erro'])) {
+            echo "<div class='resultado erro'>" . $_SESSION['erro'] . "</div>";
+            $_SESSION['erro'] = null;
+        }  
         ?>
     </div>
 </body>

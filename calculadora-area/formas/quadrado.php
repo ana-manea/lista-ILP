@@ -24,17 +24,33 @@
        <form method="post" action="">
             <label>Lado (l):</label>
             <input type="number" name="lado" required>
-            <input type="submit" name="calc_quadrado" value="Calcular">
+            <input type="submit" id="botao" name="calc_quadrado" value="Calcular">
         </form>
         <?php
-        if (isset($_POST['calc_quadrado']) && !empty($_POST['lado']) && ($_POST['lado'] >= 0)) {
-            $lado = $_POST['lado'];
-            $area = pow($lado, 2);
-            echo "<div class='resultado'>Área: " . number_format($area, 2, ',', '.') . "</div>";
+        if (isset($_POST['calc_quadrado'])) {
+            if (!empty($_POST['lado']) && ($_POST['lado'] >= 0)) {
+                $lado = $_POST['lado'];
+                $area = pow($lado, 2);
+                $resultado = number_format($area, 2, ',', '.');
+                session_start();
+                $_SESSION['resultado'] = $resultado;
+                $_SESSION['erro'] = null;
+            } else {
+                session_start();
+                $_SESSION['resultado'] = null;
+                $_SESSION['erro'] = "Informe um valor válido.";
+            }
+            header('Location: quadrado.php');
+            exit();
         }
 
-        else if (isset($_POST['calc_quadrado']) && ($_POST['lado'] < 0)) {
-            echo "Informe um valor válido";
+        session_start();
+        if (!empty($_SESSION['resultado'])) {
+            echo "<div class='resultado'>Área: " . $_SESSION['resultado'] . "</div>";
+            $_SESSION['resultado'] = null;
+        } elseif (!empty($_SESSION['erro'])) {
+            echo "<div class='resultado erro'>" . $_SESSION['erro'] . "</div>";
+            $_SESSION['erro'] = null;
         }
         ?>
     </div>
